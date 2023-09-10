@@ -5,3 +5,7 @@
 2. Enable custom Html/CSS/JS
 3. Paste Html to HTML Tab, CSS to CSS Tab, and JS to JS Tab.
 4. Save Settings
+
+
+# Recommendations
+Recommended browser source size: 755 (width) x 1365 (height)

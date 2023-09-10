@@ -1,42 +1,46 @@
 // Please use event listeners to run functions.
+
+let currentObj = {};
+let lastObj = {};
+const messageStyle = {
+    "sent": "sent",
+    "received": "received"
+};
+let isSentMessage = true;
+
 document.addEventListener('onLoad', function(obj) {
-	// obj will be empty for chat widget
-	// this will fire only once when the widget loads
+    // obj will be empty for chat widget
+    // this will fire only once when the widget loads
 });
-
-let lastMessageFrom = "";
-let messageStyle = "sent";
-
 
 document.addEventListener('onEventReceived', function(obj) {
-  	console.log(obj);
-  	let currentFrom = obj.detail.from;	
-  	let messageId = obj.detail.messageId;
-  	let oldClassName = messageStyle;
-    let newClassName = "";	
-  
-  	if(lastMessageFrom === currentFrom) {
-      //is same user
-      newClassName = "sent";
-    } else {
-      //is different user
-      newClassName = "received";
+    currentObj = obj;
+    console.log(currentObj);
+
+    let messageId = currentObj.detail.messageId;
+
+    if(!lastObj.detail) {
+        lastObj = currentObj;
+        return;
     }
-  	
-  	//change style
-  	changeMessageStyleCss(messageId, oldClassName, newClassName);
-  	console.log(messageStyle)
-  
-  	//set last message from
-	lastMessageFrom = obj.detail.from;
+
+    if(currentObj.detail.from !== lastObj.detail.from) {
+        isSentMessage = !isSentMessage; //flip bool
+    }
+
+    //change style
+    changeMessageStyleCss(messageId, isSentMessage);
+
+    //set last message from
+    lastObj = currentObj;
 });
 
-function changeMessageStyleCss(messageId, oldClassName, newClassName) {
-  //get element by message Id
-  let currentMessageObj = $('*[data-id="'+messageId+'"]');
-  
-  console.log(currentMessageObj);
-  
-  //set csss atribute on message element - change old style to new style
-  currentMessageObj.toggleClass(''+oldClassName+' '+newClassName);
+function changeMessageStyleCss(messageId, isSent) {
+    //get element by message Id
+    let currentMessageObj = $('*[data-id="'+messageId+'"]');
+    console.log(currentMessageObj);
+
+    if(!isSent) {
+        currentMessageObj.toggleClass(''+messageStyle.sent+' '+messageStyle.received);
+    }
 }
